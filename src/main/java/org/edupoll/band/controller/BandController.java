@@ -34,6 +34,8 @@ public class BandController {
 			criteria.put("memberUserId", logonUser.getUserId());
 			BandMember member = bandMemberDao.findByRoomIdAndUserId(criteria);
 			model.addAttribute("member", member);
+			
+			// 여기서 logonUser의 모든 프로필 정보를 담은 List<Profile> profiles 보내주기
 		}
 
 		return "band/home";

@@ -27,26 +27,28 @@
 				<small>${bandRoomDescription }</small>
 			</div>
 			<div class="mt-2">
-				<c:choose>
-					<c:when test="${member.memberStatus eq 'accept' }">
-						<button type="button" class="btn w-100 text-center" style="background-color: ${bandRoomColor};" data-bs-toggle="modal"
-							data-bs-target="#joinBandModal">글쓰기</button>
-					</c:when>
-					<c:when test="${member.memberStatus eq 'request' }">
-						<button type="button" class="btn w-100 text-center" style="background-color: ${bandRoomColor};" data-bs-toggle="modal"
-							data-bs-target="#joinBandModal">가입대기중</button>
-					</c:when>
-					<c:otherwise>
-						<button type="button" class="btn w-100 text-center" style="background-color: ${bandRoomColor};" data-bs-toggle="modal"
-							data-bs-target="#joinBandModal">가입신청하기</button>
-					</c:otherwise>
-				</c:choose>
+				<button type="button" class="btn w-100 text-center" style="background-color: ${bandRoomColor};" data-bs-toggle="modal"
+					data-bs-target="#joinBandModal">글쓰기</button>
 			</div>
 		</div>
 		<div class="flex-grow-1 flex-column" style="min-width: 500px; background-color:aliceblue;">
-			<input type="text" placeholder="글 내용,#태그,@작성자 검색" class="w-100" />
-			<div style="min-height: 100px;">sfasdf</div>
-			<div style="min-height: 100px;">asdfasdf</div>
+			<div>
+				가입신청목록
+			</div>
+			<div>
+				<c:forEach var="one" items="${requests }">
+					<div class="d-flex align-items-center">
+						<div>
+							<img src="${fn:startsWith(one.profile.profileImageUrl, '/band-upload') ? contextPath:'' }${one.profile.profileImageUrl }" class="rounded-circle">
+						</div>
+						<div class="flex-grow-1">
+							${one.profileNickname }
+						</div>
+						<button type="button" class="btn">수락</button>
+						<button type="button" class="btn">거절</button>
+					</div>
+				</c:forEach>
+			</div>
 		</div>
 		<div class="pb-3 ms-3" style="min-width: 208px;">
 			<div>다가오는 일정</div>
@@ -63,34 +65,14 @@
 					<button type="button" class="btn-close position-absolute" style="top:10px; right:10px;" data-bs-dismiss="modal" aria-label="Close"></button>
 					<div class="modal-title fs-5 text-center position-relative" id="staticBackdropLabel">
 						<span class="h3">${bandRoomName }</span><br/>
-						<small>이 밴드에 사용할 프로필을 선택하세요.<br/>선택한 프로필의 사진과 스토리를 이 밴드 멤버들도 볼 수 있게 돼요.</small>
 					</div>
 				</div>
 				<form action="${contextPath }/${bandRoom.bandRoomId}/request" method="post">
 					<div class="modal-body" style="min-height:270px;">
-						<c:forEach var="one" items="${profiles }" varStatus="status">
-							<div class="d-flex align-items-center">
-								<div>
-									<img src="${fn:startsWith(one.profileImageUrl, '/band-upload') ? contextPath:'' }${one.profileImageUrl }" class="rounded-circle">
-								</div>
-								<div class="flex-grow-1">
-									${one.profileNickname }
-								</div>
-								<input type="radio" name="profileId" value="${one.profileId }" ${status.first ? 'checked' :'' }/>
-							</div>
-						</c:forEach>
-						<div class="d-flex align-items-center">
-							<div>
-								<img alt="test" src="${fn:startsWith(one.profileImageUrl, '/band-upload') ? contextPath:'' }${one.profileImageUrl }" class="rounded-circle">
-							</div>
-							<div class="flex-grow-1">
-								허원
-							</div>
-							<input type="radio" name="profileId" value="1"/>
-						</div>
+					
 					</div>
 					<div class="modal-footer justify-content-center">
-						<button type="submit" class="btn" style="background-color: ${bandRoomColor};">밴드 가입하기</button>
+					
 					</div>
 				</form>
 			</div>
