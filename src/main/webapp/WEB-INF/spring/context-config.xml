@@ -43,12 +43,11 @@
 		<property name="prefix" value="/WEB-INF/view/"></property>
 		<property name="suffix" value=".jsp"></property>
 	</bean>
-
 	<!-- multipart request handler configuration -->
 	<bean
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
 		id="multipartResolver">
-		<property name="uploadTempDir" value="file:c:\\tempo"></property>
+		<property name="uploadTempDir" value="file:c:\\tempo"/>
 	</bean>
 
 	<!-- DataSource configuration -->
