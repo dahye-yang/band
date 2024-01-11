@@ -19,4 +19,5 @@ public class Post {
 	private int postMemberId;
 	private Date postWriteAt;
 	private int viewCnt;
+	private String postBandRoomId;
 }

@@ -5,5 +5,13 @@
   
   <mapper namespace="org.edupoll.band.dao.PostDao">
   	
+  	<insert id="savePost">
+  		<selectKey keyProperty="id" order="BEFORE">
+  			select posts_seq.nextval from dual
+  		</selectKey>
+  		insert into posts values(#{id}, #{content}, #{postMemberId}, sysdate, 0, #{postBandRoomId})
+  	</insert>
+  	
+  	
   	
   </mapper>

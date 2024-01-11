@@ -88,26 +88,74 @@
 	<!-- postWrite Modal -->
 	<div class="modal fade" id="postWriteModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" style="width: 600px;">
-			<div class="modal-content" style="height: 500px;">
+			<div class="modal-content" style="min-height: 500px;">
 				<div class="modal-header justify-content-center">
 					<button type="button" class="btn-close position-absolute" style="top:10px; right:10px;" data-bs-dismiss="modal" aria-label="Close"></button>
 					<div class="modal-title text-center position-relative" id="staticBackdropLabel">
 						<span class="fw-bold">글쓰기</span>
 					</div>
 				</div>
-				<div class="modal-body" style="min-height:270px;">
-					<textarea class="w-100 h-100 p-3 border border-1" style="resize:none; outline:none;" placeholder="새로운 소식을 남겨보세요." ></textarea>
-				</div>
-				<div class="modal-footer justify-content-between align-items-center">
-					<i class="bi bi-image fs-3 ps-1"></i>
-					<button type="submit" class="btn px-5 text-white" style="background-color:#000033;">게시</button>
-				</div>
+				<form action="${contextPath }/band/post/add" method="post" enctype="multipart/form-date">
+					<div class="modal-body" style="min-height:320px;">
+						<textarea class="w-100 p-3 border border-1" style="resize:none; outline:none; height:320px" placeholder="새로운 소식을 남겨보세요." name="content"></textarea>
+						<div class="d-flex" style="overflow-x:auto;" id="imageView">
+							<!-- script로 채워줄 부분 -->
+						</div>
+					</div>
+					<div class="modal-footer justify-content-between align-items-center">
+						<i class="bi bi-image fs-3 ps-1" style="cursor:pointer;" onclick="document.querySelector('#images').click();"></i>
+						<input type="file" id="images" name="images" style="display:none;" multiple accept="image/**"/>
+						<input type="hidden" id="postMemberId" value="${member.memberId }"/>
+						<input type="hidden" id="postBandRoomId" value="${bandRoom.bandRoomId }"/>
+						<button type="submit" class="btn px-5 text-white" style="background-color:#000033;">게시</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 	<script>
-		
+		document.querySelector("#images").onchange = function(e) {
+			
+			// 이전에 선택되어있던 것들 삭제
+			const imageView = document.querySelector("#imageView");
+			while (imageView.firstChild) {
+				imageView.removeChild(imageView.firstChild);
+			}
+			
+			const files = [...document.querySelector("#images").files];
+			
+			files.forEach(function(file) {
+				const fileReader = new FileReader();
+				
+				fileReader.readAsDataURL(file);
+				fileReader.onload = function(e) {
+					const div = document.createElement("div");
+					div.className = "mx-1 rounded position-relative";
+					div.style.overflow = "hidden";
+					div.style.minWidth = "100px";
+					
+					const img = document.createElement("img");
+					img.src = e.target.result;
+					img.width = 100;
+					img.height = 100;
+					img.className = "object-fit-cover";
+					div.appendChild(img);
+					
+					const button = document.createElement("button");
+					button.type = "button";
+					button.className = "btn-close position-absolute top-0 end-0";
+					button.ariaLabel = "Close";
+					div.appendChild(button);
+					
+					button.onclick = function() {
+						document.querySelector("#imageView").removeChild(this.parentNode);
+					}
+					
+					document.querySelector("#imageView").appendChild(div);
+				}
+			});
+		}
 	</script>
 </body>
 </html>

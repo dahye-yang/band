@@ -1,5 +1,7 @@
 package org.edupoll.band.dao;
 
-public interface ImageDao {
+import org.edupoll.band.model.Image;
 
+public interface ImageDao {
+	public int saveImageFromPost(Image image);
 }

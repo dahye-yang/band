@@ -1,5 +1,7 @@
 package org.edupoll.band.dao;
 
-public interface PostDao {
+import org.edupoll.band.model.Post;
 
+public interface PostDao {
+	public int savePost(Post post);
 }
