@@ -12,4 +12,8 @@
   		(#{bandRoomId}, #{bandRoomName}, sysdate, #{coverImageUrl}, #{bandRoomColor}, #{type})
   	</insert>
   	
+  	<select id="findByBandRoomId" resultType="bandRoom">
+  		select * from bandrooms where bandroom_id = #{bandRoomId}
+  	</select>
+  	
   </mapper>

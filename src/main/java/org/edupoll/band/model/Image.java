@@ -1,5 +1,7 @@
 package org.edupoll.band.model;
 
+import java.sql.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,12 +13,11 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BandMember {
-	private int memberId;
-	private String memberBandRoomId;
-	private String memberUserId;
-	private int memberProfileId;
-	private String memberStatus;
-	
-	private Profile profile;
+public class Image {
+	private int imageId;
+	private String imageUrl;
+	private int imageAlbumId;
+	private int imagePostId;
+	private int imageMemberId;
+	private Date imageUploadAt;
 }

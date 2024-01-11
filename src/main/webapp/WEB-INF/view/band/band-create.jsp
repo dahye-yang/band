@@ -135,8 +135,6 @@
 
 	<script>
 	
-	
-		
 		//기본이미지 중 택해서 미리보기 
 		const images = document.querySelectorAll(".defaultButton");
 		images.forEach(function(evt) {
@@ -179,7 +177,6 @@
 			}
 		}
 	</script>
-
 
 </body>
 </html>
