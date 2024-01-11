@@ -14,6 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BandRoom {
+
 	private String bandRoomId;
 	private String bandRoomName;
 	private Date bandRoomMakeAt;
@@ -22,4 +23,5 @@ public class BandRoom {
 	private String coverImageUrl;
 	private String bandRoomColor;
 	private String type;
+
 }
