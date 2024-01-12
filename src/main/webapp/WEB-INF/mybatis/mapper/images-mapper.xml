@@ -8,5 +8,9 @@
 	<insert id="saveImageFromPost">
 		insert into images values (images_seq.nextval, #{imageUrl}, #{imageAlbumId, jdbcType=NUMERIC}, #{imagePostId}, #{imageMemberId}, sysdate, #{imageBandRoomId})
 	</insert>
-
+  	
+  <select id="findAllByBandRoomId" resultType="image">
+    SELECT * FROM IMAGES WHERE IMAGE_BANDROOM_ID = #{imageBandRoomId}
+  </select>
 </mapper>
+

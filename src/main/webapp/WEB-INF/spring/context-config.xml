@@ -17,6 +17,7 @@
 	<mvc:annotation-driven />
 	<mvc:default-servlet-handler />
 
+
 	<mvc:resources mapping="/band/upload/**" location="file:${band.upload.dir}" cache-period="0"/>
 
 	<!-- interceptor config <bean id="logonCheckInterceptor" class="org.edupoll.band.interceptor.LogonCheckInterceptor"></bean> 

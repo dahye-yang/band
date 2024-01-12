@@ -110,9 +110,11 @@ public class BandSignController {
 	}
 
 	@PostMapping("/band-create")
-	public String createBandRoom(@ModelAttribute CreatBandRoom createBandRoom, @RequestParam String coverImageUrl,
-			Model model) throws IllegalStateException, IOException {
 
+	public String createBandRoom(
+								@ModelAttribute CreatBandRoom createBandRoom 
+								,@RequestParam String coverImageUrl ,Model model) throws IllegalStateException, IOException {
+		
 		String uuid = UUID.randomUUID().toString();
 		String[] uuids = uuid.split("-");
 

@@ -14,6 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Image {
+
 	private Integer imageId;
 	private String imageUrl;
 	private Integer imageAlbumId;
