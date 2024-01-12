@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.edupoll.band.dao.ImageDao">
+
+	<insert id="saveImageFromPost">
+		insert into images values (images_seq.nextval, #{imageUrl}, #{imageAlbumId, jdbcType=NUMERIC}, #{imagePostId}, #{imageMemberId}, sysdate, #{imageBandRoomId})
+	</insert>
+  	
+  <select id="findAllByBandRoomId" resultType="image">
+    SELECT * FROM IMAGES WHERE IMAGE_BANDROOM_ID = #{imageBandRoomId}
+  </select>
+</mapper>
+

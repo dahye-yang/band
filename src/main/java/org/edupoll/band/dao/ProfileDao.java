@@ -10,5 +10,4 @@ public interface ProfileDao {
 		public int profileSave(Profile one);
 		public int profileUpdate(Profile one);
 		public List<Profile> findProfileById (String id);
-
 }
