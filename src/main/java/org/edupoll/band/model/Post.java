@@ -1,6 +1,7 @@
 package org.edupoll.band.model;
 
 import java.sql.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,4 +21,8 @@ public class Post {
 	private Date postWriteAt;
 	private int viewCnt;
 	private String postBandRoomId;
+	
+	private BandMember member;
+	private List<Image> images;
+	private Profile profile;
 }

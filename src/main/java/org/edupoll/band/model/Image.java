@@ -14,11 +14,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Image {
-	private int imageId;
+	private Integer imageId;
 	private String imageUrl;
-	private int imageAlbumId;
-	private int imagePostId;
-	private int imageMemberId;
+	private Integer imageAlbumId;
+	private Integer imagePostId;
+	private Integer imageMemberId;
 	private Date imageUploadAt;
 	private String imageBandRoomId;
 }

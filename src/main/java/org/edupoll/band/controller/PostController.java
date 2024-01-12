@@ -46,7 +46,7 @@ public class PostController {
 				}
 				String uuid = UUID.randomUUID().toString();
 				Image postImage = Image.builder() //
-						.imageUrl(uuid) //
+						.imageUrl("/band/upload/" + postAdd.getPostBandRoomId() + "/" + uuid) //
 						.imagePostId(post.getPostId()) //
 						.imageMemberId(postAdd.getPostMemberId()) //
 						.imageBandRoomId(postAdd.getPostBandRoomId()) //
