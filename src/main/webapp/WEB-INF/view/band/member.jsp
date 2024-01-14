@@ -62,11 +62,11 @@
 					<div class="fw-bold">멤버</div>
 					<div class="mt-3">
 						<c:forEach var="one" items="${members }">
-							<div class="d-flex align-items-center">
+							<div class="d-flex align-items-center border-bottom border-1 pb-3">
 								<div>
 									<img src="${fn:startsWith(one.profile.profileImageUrl, 'http') ? '' : contextPath }${one.profile.profileImageUrl }" class="rounded-circle" width="48" height="48">
 								</div>
-								<div class="ms-3">
+								<div class="ms-3 fw-bold">
 									${one.profile.profileNickName }
 								</div>
 							</div>
