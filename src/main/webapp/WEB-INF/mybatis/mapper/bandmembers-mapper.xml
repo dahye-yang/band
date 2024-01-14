@@ -34,6 +34,12 @@
 	<update id="updateStatus">
 		update bandmembers set member_status = #{memberStatus} where member_id = #{memberId}
 	</update>
+	
+	<select id="findByRoomId" resultMap="bandMemberWithProfile">
+		select * from
+			bandmembers b left join profiles p on b.member_profile_id = p.profile_id
+			where member_bandroom_id = #{bandRoomId} and member_status = 'accept'
+	</select>
 
 	<select id="countMembers" resultType="int">
 		select count(*) from bandmembers where member_bandroom_id = #{memberBandRoomId} and member_status = 'accept'

@@ -13,8 +13,10 @@ public interface BandMemberDao {
 	public BandMember findByMemberId(int memberId);
 
 	public int updateStatus(Map<String, Object> criteria);
-	
+
+	public List<BandMember> findByRoomId(String bandRoomId);
+
 	public int countMembers(String bandRoomId);
-	
+
 	public List<BandMember> findRequestByRoomId(String bandRoomId);
 }

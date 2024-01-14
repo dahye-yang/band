@@ -84,7 +84,7 @@
 	<script>
 		function processRequest(event) {
 			const xhr = new XMLHttpRequest();
-			xhr.open("post", "${contextPath}/band/${bandRoom.bandRoomId}/applications/accept", true);
+			xhr.open("post", "${contextPath}/band/${bandRoom.bandRoomId}/applications", true);
 			xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
 			
 			let target = event.target;

@@ -35,73 +35,6 @@ import lombok.RequiredArgsConstructor;
 public class BandSignController {
 
 	private final BandRoomDao bandRoomDao;
-	private final BandMemberDao bandMemberDao;
-
-	@PostMapping("/{bandRoomId}/request")
-	public String proceedBandSign(@SessionAttribute User logonUser, @PathVariable String bandRoomId,
-			@RequestParam int profileId) {
-
-		Map<String, Object> criteria = new HashMap<>();
-		criteria.put("memberBandRoomId", bandRoomId);
-		criteria.put("memberUserId", logonUser.getUserId());
-		BandMember found = bandMemberDao.findByRoomIdAndUserId(criteria);
-
-		if (found == null) {
-			BandMember member = BandMember.builder() //
-					.memberBandRoomId(bandRoomId) //
-					.memberUserId(logonUser.getUserId()) //
-					.memberProfileId(profileId) //
-					.memberStatus("request") //
-					.build();
-			bandMemberDao.saveMember(member);
-		} else if (found.getMemberStatus().equals("reject") || found.getMemberStatus().equals("leave")) {
-			criteria.clear();
-			criteria.put("memberStatus", "request");
-			criteria.put("memberId", found.getMemberId());
-			bandMemberDao.updateStatus(criteria);
-		}
-
-		return "redirect:/band/" + bandRoomId; // 가입신청한 밴드룸으로
-	}
-
-	@GetMapping("/{bandRoomId}/applications")
-	public String showRequests(@SessionAttribute(required = false) User logonUser, @PathVariable String bandRoomId,
-			Model model) {
-		
-		Map<String, Object> criteria = new HashMap<>();
-		criteria.put("memberBandRoomId", bandRoomId);
-		criteria.put("memberUserId", logonUser.getUserId());
-		BandMember member = bandMemberDao.findByRoomIdAndUserId(criteria);
-		model.addAttribute("member", member);
-
-		int memberCnt = bandMemberDao.countMembers(bandRoomId);
-		model.addAttribute("memberCnt", memberCnt);
-
-		BandRoom bandRoom = bandRoomDao.findByBandRoomId(bandRoomId);
-		model.addAttribute("bandRoom", bandRoom);
-		
-		List<BandMember> requests = bandMemberDao.findRequestByRoomId(bandRoomId);
-		model.addAttribute("requests", requests);
-
-		return "band/applications";
-	}
-
-	@PostMapping("/{bandRoomId}/applications/accept")
-	@ResponseBody
-	public String proceedAccept(@SessionAttribute User logonUser, @PathVariable String bandRoomId,
-			@RequestParam String type, @RequestParam int memberId, Model model) {
-
-		Map<String, Object> criteria = new HashMap<>();
-		criteria.put("memberStatus", type);
-		criteria.put("memberId", memberId);
-		bandMemberDao.updateStatus(criteria);
-		
-		Map<String, Object> response = new HashMap<>();
-		response.put("result", "success");
-		Gson gson = new Gson();
-
-		return gson.toJson(response);
-	}
 
 	@GetMapping("/band-create")
 	public String showFormForBandCerate() {
@@ -111,10 +44,9 @@ public class BandSignController {
 
 	@PostMapping("/band-create")
 
-	public String createBandRoom(
-								@ModelAttribute CreatBandRoom createBandRoom 
-								,@RequestParam String coverImageUrl ,Model model) throws IllegalStateException, IOException {
-		
+	public String createBandRoom(@ModelAttribute CreatBandRoom createBandRoom, @RequestParam String coverImageUrl,
+			Model model) throws IllegalStateException, IOException {
+
 		String uuid = UUID.randomUUID().toString();
 		String[] uuids = uuid.split("-");
 

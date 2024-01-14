@@ -15,25 +15,15 @@
 	<div style="background-color: #F0F0F0;">
 		<!-- nav 들어갈 자리 -->
 		<div class="sticky-top" style="background-color: black; height: 40px; font-size: 14px;">
-			<ul class="nav justify-content-center gap-5 nav-underline" >
-				<li class="nav-item">
-					<a class="nav-link link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="${contextPath }/band/${bandRoomId}" style="padding-bottom: 1px">게시글</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="${contextPath }/band/${bandRoomId}/album" style="padding-bottom: 1px">사진첩</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="#" style="padding-bottom: 1px">일정</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link link-light link-offset-2 link-underline-opa city-25 link-underline-opacity-100-hover" href="#" style="padding-bottom: 1px">첨부</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="#" style="padding-bottom: 1px">멤버</a>
-				</li>
+			<ul class="nav justify-content-center gap-5 nav-underline">
+				<li class="nav-item"><a class="nav-link link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="${contextPath }/band/${bandRoomId}" style="padding-bottom: 1px">게시글</a></li>
+				<li class="nav-item"><a class="nav-link link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="${contextPath }/band/${bandRoomId}/album" style="padding-bottom: 1px">사진첩</a></li>
+				<li class="nav-item"><a class="nav-link link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="#" style="padding-bottom: 1px">일정</a></li>
+				<li class="nav-item"><a class="nav-link link-light link-offset-2 link-underline-opa city-25 link-underline-opacity-100-hover" href="#" style="padding-bottom: 1px">첨부</a></li>
+				<li class="nav-item"><a class="nav-link link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="${contextPath }/band/${bandRoomId}/member" style="padding-bottom: 1px">멤버</a></li>
 			</ul>
 		</div>
-		
+
 		<div class="mx-auto d-flex align-items-start pt-3 " style="width: 1034px;">
 			<!-- 1 -->
 			<div class="pb-3 me-3 sticky-top" style="width: 208px; height: 157px;">
@@ -122,8 +112,8 @@
 				<div class="modal-header">
 					<button type="button" class="btn-close position-absolute" style="top: 10px; right: 10px;" data-bs-dismiss="modal" aria-label="Close"></button>
 					<div class="modal-title text-center position-relative" id="staticBackdropLabel">
-						<span class="h3">${bandRoom.bandRoomName }</span><br /> <small>이 밴드에 사용할 프로필을 선택하세요.<br />선택한 프로필의 사진과 스토리를 이 밴드 멤버들도 볼 수 있게 돼요.
-						</small>
+						<span class="h3">${bandRoom.bandRoomName }</span><br />
+						<small>이 밴드에 사용할 프로필을 선택하세요.<br />선택한 프로필의 사진과 스토리를 이 밴드 멤버들도 볼 수 있게 돼요.</small>
 					</div>
 				</div>
 				<form action="${contextPath }/band/${bandRoom.bandRoomId}/request" method="post">
@@ -163,7 +153,10 @@
 						</div>
 					</div>
 					<div class="modal-footer justify-content-between align-items-center">
-						<i class="bi bi-image fs-3 ps-1" style="cursor: pointer;" onclick="document.querySelector('#images').click();"></i> <input type="file" id="images" name="images" style="display: none;" multiple accept="image/**" /> <input type="hidden" name="postMemberId" value="${member.memberId }" /> <input type="hidden" name="postBandRoomId" value="${bandRoom.bandRoomId }" />
+						<div><i class="bi bi-image fs-3 ps-1" style="cursor: pointer;" onclick="document.querySelector('#images').click();"></i></div>
+						<input type="file" id="images" name="images" style="display: none;" multiple accept="image/**" />
+						<input type="hidden" name="postMemberId" value="${member.memberId }" />
+						<input type="hidden" name="postBandRoomId" value="${bandRoom.bandRoomId }" />
 						<button type="submit" class="btn px-5 text-white" style="background-color: #000033;">게시</button>
 					</div>
 				</form>
@@ -183,7 +176,7 @@
 				<form action="${contextPath }/band/post/add" method="post" enctype="multipart/form-data">
 					<div class="modal-body" style="min-height: 320px;">
 						<textarea class="w-100 p-3 border border-1" style="resize: none; outline: none; height: 320px" name="content" id="updateContent"></textarea>
-						<input type="hidden" name="postId" id="updatePostId"/>
+						<input type="hidden" name="postId" id="updatePostId" />
 						<div class="d-flex" style="overflow-x: auto;" id="updatePostImageView">
 							<!-- script로 채워줄 부분 -->
 						</div>

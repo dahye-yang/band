@@ -9,20 +9,19 @@ import java.util.Map;
 import org.edupoll.band.dao.AlbumDao;
 import org.edupoll.band.dao.BandMemberDao;
 import org.edupoll.band.dao.BandRoomDao;
+import org.edupoll.band.dao.ImageDao;
 import org.edupoll.band.dao.PostDao;
 import org.edupoll.band.dao.ProfileDao;
-import org.edupoll.band.model.Post;
-import org.edupoll.band.model.Profile;
-import org.edupoll.band.dao.ImageDao;
 import org.edupoll.band.model.Album;
 import org.edupoll.band.model.BandMember;
 import org.edupoll.band.model.BandRoom;
 import org.edupoll.band.model.Image;
+import org.edupoll.band.model.Post;
+import org.edupoll.band.model.Profile;
 import org.edupoll.band.model.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,10 +43,9 @@ public class BandController {
 	private final ImageDao imageDao;
 
 	@GetMapping("/band/{bandRoomId}")
-	public String showBandRoom(@SessionAttribute(required = false) User logonUser, @PathVariable String bandRoomId,
+	public String showBandRoom(@SessionAttribute User logonUser, @PathVariable String bandRoomId,
 			Model model) {
 
-		if (logonUser != null) {
 			Map<String, Object> criteria = new HashMap<>();
 			criteria.put("memberBandRoomId", bandRoomId);
 			criteria.put("memberUserId", logonUser.getUserId());
@@ -66,7 +64,6 @@ public class BandController {
 
 			List<Post> posts = postDao.findByRoomIdWithImage(bandRoomId);
 			model.addAttribute("posts", posts);
-		}
 
 		return "band/home";
 	}
