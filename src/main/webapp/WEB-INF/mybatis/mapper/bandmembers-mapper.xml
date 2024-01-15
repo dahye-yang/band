@@ -23,8 +23,10 @@
 		insert into bandmembers values(bandmembers_seq.nextval, #{memberBandRoomId}, #{memberUserId}, #{memberProfileId}, #{memberStatus})
 	</insert>
 	
-	<select id="findByRoomIdAndUserId" resultType="bandMember">
-		select * from bandmembers where member_bandroom_id = #{memberBandRoomId} and member_user_id = #{memberUserId} 
+	<select id="findByRoomIdAndUserId" resultMap="bandMemberWithProfile">
+		select * from bandmembers m
+			left join profiles p on m.member_profile_id = p.profile_id
+		where member_bandroom_id = #{memberBandRoomId} and member_user_id = #{memberUserId} 
 	</select>
 	
 	<select id="findByMemberId" resultType="bandMember">

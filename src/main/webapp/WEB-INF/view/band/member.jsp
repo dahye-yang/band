@@ -36,17 +36,7 @@
 					<small>${bandRoom.bandRoomDescription }</small>
 				</div>
 				<div class="mt-2">
-					<c:choose>
-						<c:when test="${member.memberStatus eq 'accept' }">
-							<button type="button" id="write" class="btn w-100 text-center" style="background-color: ${bandRoom.bandRoomColor};" data-bs-toggle="modal" data-bs-target="#postWriteModal">글쓰기</button>
-						</c:when>
-						<c:when test="${member.memberStatus eq 'request' }">
-							<button type="button" class="btn w-100 text-center" style="background-color: ${bandRoom.bandRoomColor};">가입대기중</button>
-						</c:when>
-						<c:otherwise>
-							<button type="button" class="btn w-100 text-center" style="background-color: ${bandRoom.bandRoomColor};" data-bs-toggle="modal" data-bs-target="#joinBandModal">가입신청하기</button>
-						</c:otherwise>
-					</c:choose>
+					<button type="button" id="write" class="btn w-100 text-center" style="background-color: ${bandRoom.bandRoomColor};" data-bs-toggle="modal" data-bs-target="#postWriteModal">글쓰기</button>
 				</div>
 			</div>
 			<!-- 2 -->
@@ -61,8 +51,8 @@
 				<div class="mt-1 p-3 shadow-sm rounded-1" style="background-color: white;">
 					<div class="fw-bold">멤버</div>
 					<div class="mt-3">
-						<c:forEach var="one" items="${members }">
-							<div class="d-flex align-items-center border-bottom border-1 pb-3">
+						<c:forEach var="one" items="${members }" varStatus="status">
+							<div class="d-flex align-items-center border-bottom border-1 pb-3 ${status.first ? '' : 'mt-3' }">
 								<div>
 									<img src="${fn:startsWith(one.profile.profileImageUrl, 'http') ? '' : contextPath }${one.profile.profileImageUrl }" class="rounded-circle" width="48" height="48">
 								</div>
@@ -86,36 +76,6 @@
 
 	<!-- ========================================================================================================== -->
 
-	<!-- join Modal -->
-	<div class="modal fade" id="joinBandModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" style="width: 360px;">
-			<div class="modal-content" style="height: 500px;">
-				<div class="modal-header">
-					<button type="button" class="btn-close position-absolute" style="top: 10px; right: 10px;" data-bs-dismiss="modal" aria-label="Close"></button>
-					<div class="modal-title text-center position-relative" id="staticBackdropLabel">
-						<span class="h3">${bandRoom.bandRoomName }</span><br />
-						<small>이 밴드에 사용할 프로필을 선택하세요.<br />선택한 프로필의 사진과 스토리를 이 밴드 멤버들도 볼 수 있게 돼요.</small>
-					</div>
-				</div>
-				<form action="${contextPath }/band/${bandRoom.bandRoomId}/request" method="post">
-					<div class="modal-body" style="min-height: 270px;">
-						<c:forEach var="one" items="${profiles }" varStatus="status">
-							<div class="d-flex align-items-center">
-								<div>
-									<img src="${fn:startsWith(one.profileImageUrl, 'http') ? '' : contextPath }${one.profileImageUrl }" class="rounded-circle" width="32" height="32">
-								</div>
-								<div class="flex-grow-1 ms-3">${one.profileNickName }</div>
-								<input type="radio" name="profileId" value="${one.profileId }" ${status.first ? 'checked' :'' } />
-							</div>
-						</c:forEach>
-					</div>
-					<div class="modal-footer justify-content-center">
-						<button type="submit" class="btn" style="background-color: ${bandRoom.bandRoomColor};">밴드 가입하기</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
 	<!-- postWrite Modal -->
 	<div class="modal fade" id="postWriteModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" style="width: 600px;">
