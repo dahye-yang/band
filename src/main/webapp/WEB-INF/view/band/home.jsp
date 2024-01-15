@@ -93,7 +93,7 @@
 						<div class="d-flex justify-content-between mx-2 mt-3 align-items-center">
 							<div>
 								<span>댓글</span>
-								<button class="ms-1" style="background-color:transparent; border:none;" onclick="toggleComment(event);"><i class="bi bi-caret-down-square"></i></button>
+								<button class="ms-1" style="background-color:transparent; border:none;" data-post-id="${one.postId }" onclick="toggleComment(event);"><i class="bi bi-caret-down-square"></i></button>
 							</div>
 							<div class="d-flex align-items-center">
 								<i class="bi bi-eye"></i><span class="text-secondary ms-1">${one.viewCnt }</span>
@@ -101,7 +101,7 @@
 						</div>
 					</div>
 					<div class="mt-1 rounded-1" style="display:none; background-color: white;">
-						<div>
+						<div class="commentContainer">
 							<!-- script 로 댓글 넣기 -->
 						</div>
 						<div class="d-flex align-items-center px-2 py-1">
@@ -361,11 +361,81 @@
 		}
 		
 		function toggleComment(e) {
+			const xhr = new XMLHttpRequest();
+			xhr.open("get", "${contextPath}/band/comment/get?postId=" + e.currentTarget.dataset.postId, true);
+			xhr.send();
+			xhr.onreadystatechange = function() {
+				if(xhr.readyState == 4) {
+					var response = JSON.parse(xhr.responseText);
+					if (response.result == 'success' && response.comments.length > 0) {
+						const comments = response.comments;
+						const container = document.querySelector(".commentContainer");
+						container.innerHTML = '';
+						comments.forEach((comment) => {
+							
+							let div = document.createElement("div");
+							div.className = "d-flex align-items-start px-2 py-3 border-bottom border-1 mx-3";
+							
+							let img = document.createElement("img");
+							let imageUrl = comment.member.profile.profileImageUrl;
+							if (!imageUrl.startsWith('http')) {
+								imageUrl = "${contextPath}" + imageUrl;
+							}
+							img.src = imageUrl;
+							img.className = "rounded-circle me-2";
+							img.width = "36";
+							img.height = "36";
+							div.appendChild(img);
+							
+							let innerDiv = document.createElement("div");
+								let innerDiv1 = document.createElement("div");
+								innerDiv1.className = "fw-bold";
+								innerDiv1.textContent = comment.member.profile.profileNickName;
+								innerDiv.appendChild(innerDiv1);
+								
+								let innerDiv2 = document.createElement("div");
+								innerDiv2.textContent = comment.message;
+								innerDiv.appendChild(innerDiv2);
+								
+								let innerDiv3 = document.createElement("div");
+									let small = document.createElement("small");
+									small.className = "text-secondary";
+									small.textContent = comment.commentWriteAt;
+									innerDiv3.appendChild(small);
+								innerDiv.appendChild(innerDiv3);
+							div.appendChild(innerDiv);
+							
+							container.appendChild(div);
+						});
+					}
+				}
+			}
+			
 			const target = e.currentTarget.parentElement.parentElement.parentElement.nextElementSibling;
-			if (target.style.display=="block") {
+			if (target.style.display == "block") {
 				target.style.display = "none";
 			} else {
 				target.style.display = "block";
+			}
+		}
+		
+		function addComment(e) {
+			const input = e.target.parentElement.previousElementSibling.firstElementChild;
+			let postId = input.dataset.postId;
+			let memberId = input.dataset.memberId;
+			let message = input.value;
+			
+			const xhr = new XMLHttpRequest();
+			xhr.open("post", "${contextPath}/band/comment/add", true);
+			xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+			xhr.send("commentPostId=" + postId + "&commentMemberId=" + memberId + "&message=" + message);
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState == 4) {
+					var response = JSON.parse(xhr.responseText);
+					if (response.result == 'success') {
+						e.target.parentElement.parentElement.parentElement.style.display = 'none';
+					}
+				}
 			}
 		}
 		
