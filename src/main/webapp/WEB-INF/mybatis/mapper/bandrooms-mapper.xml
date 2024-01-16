@@ -46,4 +46,10 @@
   		select leader from bandrooms where bandroom_id = #{bandRoomId}
   	</select>
   	
+  	<select id="findJoinedBandRoom" resultType="bandroom">
+  		select r.* from bandmembers m
+  			left join bandrooms r on m.member_bandroom_id = r.bandroom_id
+  			where member_user_id = #{userId}
+  	</select>
+  	
   </mapper>
