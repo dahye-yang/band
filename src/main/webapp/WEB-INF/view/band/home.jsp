@@ -9,12 +9,13 @@
 <title>${bandRoom.bandRoomName }</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="${pageContext.servletContext.contextPath }/resource/style/style.css">
 </head>
 <c:set var="contextPath" value="${pageContext.servletContext.contextPath }" />
 <body>
 	<div class="position-relative" style="background-color: #F0F0F0;">
 		<!-- nav 들어갈 자리 -->
-		<div class="sticky-top" style="background-color: black; height: 40px; font-size: 14px;">
+		<div class="sticky-top ${bandRoom.bandRoomColor }" style="height: 40px; font-size: 14px;">
 			<ul class="nav justify-content-center gap-5 nav-underline">
 				<li class="nav-item"><a class="nav-link link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="${contextPath }/band/${bandRoomId}" style="padding-bottom: 1px">게시글</a></li>
 				<li class="nav-item"><a class="nav-link link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="${contextPath }/band/${bandRoomId}/album" style="padding-bottom: 1px">사진첩</a></li>
@@ -26,8 +27,8 @@
 
 		<div class="mx-auto d-flex align-items-start pt-3 " style="width: 1034px;">
 			<!-- 1 -->
-			<div class="pb-3 me-3 " style="width: 208px; height: 157px; position: sticky; top:50px">
-				<img src="${contextPath }/${bandRoom.coverImageUrl}" alt="커버사진" style="width: 208px; height: 157px; background-color: white; overflow:hidden;" class="rounded-1 object-fit-cover">
+			<div class="pb-3 me-3 " style="width: 208px; height: 157px; position: sticky; top: 50px">
+				<img src="${contextPath }/${bandRoom.coverImageUrl}" alt="커버사진" style="width: 208px; height: 157px; background-color: white; overflow: hidden;" class="rounded-1 object-fit-cover">
 				<div class="h4 pt-2">${bandRoom.bandRoomName }</div>
 				<div class="mt-2">
 					멤버 ${memberCnt } ㆍ <i class="bi bi-plus-circle"></i> 초대
@@ -38,16 +39,24 @@
 				<div class="mt-2">
 					<c:choose>
 						<c:when test="${member.memberStatus eq 'accept' }">
-							<button type="button" id="write" class="btn w-100 text-center" style="background-color: ${bandRoom.bandRoomColor};" data-bs-toggle="modal" data-bs-target="#postWriteModal">글쓰기</button>
+							<button type="button" id="write" class="py-2 border-0 w-100 text-center my-2 rounded-1 ${bandRoom.bandRoomColor }"  data-bs-toggle="modal" data-bs-target="#postWriteModal">글쓰기</button>
 						</c:when>
 						<c:when test="${member.memberStatus eq 'request' }">
-							<button type="button" class="btn w-100 text-center" style="background-color: ${bandRoom.bandRoomColor};">가입대기중</button>
+							<button type="button" class="py-2 border-0 w-100 text-center my-2 rounded-1 ${bandRoom.bandRoomColor }">가입대기중</button>
 						</c:when>
 						<c:otherwise>
-							<button type="button" class="btn w-100 text-center" style="background-color: ${bandRoom.bandRoomColor};" data-bs-toggle="modal" data-bs-target="#joinBandModal">가입신청하기</button>
+							<button type="button" class="py-2 border-0 w-100 text-center my-2 rounded-1 ${bandRoom.bandRoomColor }" data-bs-toggle="modal" data-bs-target="#joinBandModal">가입신청하기</button>
 						</c:otherwise>
 					</c:choose>
 				</div>
+				<div class="text-secondary border-bottom border-1 pb-2 lh-1">
+					<small>누구나 밴드를 검색해 찾을 수 있고, 밴드 소개와 게시글을 볼 수 있습니다.</small>
+				</div>
+				<c:if test="${bandRoom.leader eq member.memberId }">
+					<div class="text-secondary mt-2" style="cursor:pointer;">
+						<i class="bi bi-gear"></i> 밴드 설정
+					</div>
+				</c:if>
 			</div>
 			<!-- 2 -->
 			<div class="flex-grow-1 flex-column" style="min-width: 500px;" id="wrap">
@@ -93,33 +102,35 @@
 						<div class="d-flex justify-content-between mx-2 mt-3 align-items-center">
 							<div>
 								<span>댓글</span>
-								<button class="ms-1" style="background-color:transparent; border:none;" data-post-id="${one.postId }" onclick="toggleComment(event);"><i class="bi bi-caret-down-square"></i></button>
+								<button class="ms-1" style="background-color: transparent; border: none;" data-post-id="${one.postId }" onclick="toggleComment(event);">
+									<i class="bi bi-caret-down-square"></i>
+								</button>
 							</div>
 							<div class="d-flex align-items-center">
 								<i class="bi bi-eye"></i><span class="text-secondary ms-1">${one.viewCnt }</span>
 							</div>
 						</div>
-					</div>
-					<div class="mt-1 rounded-1" style="display:none; background-color: white;">
-						<div class="commentContainer">
-							<!-- script 로 댓글 넣기 -->
-						</div>
-						<div class="d-flex align-items-center px-2 py-1">
-							<div>
-								<img src="${fn:startsWith(member.profile.profileImageUrl, 'http') ? '' : contextPath }${member.profile.profileImageUrl}" class="rounded-circle" width="30" height="30">
+						<div class="pt-1 mt-1 rounded-1 border-top" style="display: none; background-color: white;">
+							<div class="commentContainer">
+								<!-- script 로 댓글 넣기 -->
 							</div>
-							<div class="flex-grow-1 ms-2">
-								<input type="text" class="w-100 border border-1 px-3 py-1 rounded-5" style="outline: none;" placeholder="댓글을 남겨주세요" data-post-id="${one.postId }" data-member-id="${member.memberId }" name="message"/>
-							</div>
-							<div class="ms-2">
-								<button type="button" class="btn border border-1 rounded-5 py-1" onclick="addComment(event);">저장</button>
+							<div class="d-flex align-items-center px-2 py-1">
+								<div>
+									<img src="${fn:startsWith(member.profile.profileImageUrl, 'http') ? '' : contextPath }${member.profile.profileImageUrl}" class="rounded-circle" width="30" height="30">
+								</div>
+								<div class="flex-grow-1 ms-2">
+									<input type="text" class="w-100 border border-1 px-3 py-1 rounded-5" style="outline: none;" placeholder="댓글을 남겨주세요" data-post-id="${one.postId }" data-member-id="${member.memberId }" name="message" />
+								</div>
+								<div class="ms-2">
+									<button type="button" class="btn border border-1 rounded-5 py-1" onclick="addComment(event);">저장</button>
+								</div>
 							</div>
 						</div>
 					</div>
 				</c:forEach>
 			</div>
 			<!-- 3 -->
-			<div class="pb-3 ms-3 " style="min-width: 208px; position: sticky; top:50px">
+			<div class="pb-3 ms-3 " style="min-width: 208px; position: sticky; top: 50px">
 				<div>다가오는 일정</div>
 				<div>채팅</div>
 				<div>파일</div>
@@ -364,17 +375,23 @@
 			const xhr = new XMLHttpRequest();
 			xhr.open("get", "${contextPath}/band/comment/get?postId=" + e.currentTarget.dataset.postId, true);
 			xhr.send();
+			
+		//	console.log(e.currentTarget);
+		//	console.log(e.currentTarget.parentNode);
+		//	console.log(e.currentTarget.parentNode.parentNode);
+		//	console.log(e.currentTarget.parentNode.parentNode.parentNode);
+		//	console.log(e.currentTarget.parentNode.parentNode.parentNode.querySelector(".commentContainer"));
+			const container = e.currentTarget.parentNode.parentNode.parentNode.querySelector(".commentContainer");
 			xhr.onreadystatechange = function() {
 				if(xhr.readyState == 4) {
 					var response = JSON.parse(xhr.responseText);
 					if (response.result == 'success' && response.comments.length > 0) {
 						const comments = response.comments;
-						const container = document.querySelector(".commentContainer");
 						container.innerHTML = '';
 						comments.forEach((comment) => {
 							
 							let div = document.createElement("div");
-							div.className = "d-flex align-items-start px-2 py-3 border-bottom border-1 mx-3";
+							div.className = "d-flex align-items-start px-1 py-2 border-bottom border-1 mx-3";
 							
 							let img = document.createElement("img");
 							let imageUrl = comment.member.profile.profileImageUrl;
@@ -410,13 +427,14 @@
 					}
 				}
 			}
-			
-			const target = e.currentTarget.parentElement.parentElement.parentElement.nextElementSibling;
+			console.log();
+			const target =container.parentNode;
 			if (target.style.display == "block") {
 				target.style.display = "none";
 			} else {
 				target.style.display = "block";
 			}
+			
 		}
 		
 		function addComment(e) {
@@ -434,6 +452,8 @@
 					var response = JSON.parse(xhr.responseText);
 					if (response.result == 'success') {
 						e.target.parentElement.parentElement.parentElement.style.display = 'none';
+						input.value='';
+						
 					}
 				}
 			}
