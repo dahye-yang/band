@@ -59,7 +59,7 @@
 <c:set var="contextPath" value="${pageContext.servletContext.contextPath }"/>
 <body>
 
-<div style="background-color: #F0F0F0;">
+<div style="background-color: #F0F0F0; min-height:100vh;">
 	
 	<div class="sticky-top" style="background-color: black; height: 40px; font-size: 14px;">
 		<ul class="nav justify-content-center gap-5 nav-underline" >
@@ -76,7 +76,7 @@
 		    <a class="nav-link link-light link-offset-2 link-underline-opa city-25 link-underline-opacity-100-hover" href="#"  style="padding-bottom: 1px">첨부</a>
 		  </li>
 		   <li class="nav-item">
-		    <a class="nav-link link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="#" style="padding-bottom: 1px">멤버</a>
+		    <a class="nav-link link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="${contextPath }/band/${bandRoomId}/member" style="padding-bottom: 1px">멤버</a>
 		  </li>
 		</ul>
 	</div>	
@@ -99,20 +99,8 @@
 				<small>${bandRoom.bandRoomDescription }</small>
 			</div>
 			<div class="mt-2">
-				<c:choose>
-					<c:when test="${member.memberStatus eq 'accept' }">
-						<button type="button" class="btn w-100 text-center" style="background-color: ${bandRoom.bandRoomColor};" data-bs-toggle="modal"
-							data-bs-target="#joinBandModal">글쓰기</button>
-					</c:when>
-					<c:when test="${member.memberStatus eq 'request' }">
-						<button type="button" class="btn w-100 text-center" style="background-color: ${bandRoom.bandRoomColor};" data-bs-toggle="modal"
-							data-bs-target="#joinBandModal">가입대기중</button>
-					</c:when>
-					<c:otherwise>
-						<button type="button" class="btn w-100 text-center" style="background-color: ${bandRoom.bandRoomColor};" data-bs-toggle="modal"
-							data-bs-target="#joinBandModal">가입신청하기</button>
-					</c:otherwise>
-				</c:choose>
+				<button type="button" class="btn w-100 text-center" style="background-color: ${bandRoom.bandRoomColor};" data-bs-toggle="modal"
+					data-bs-target="#joinBandModal">글쓰기</button>
 			</div>
 		</div>
 

@@ -19,7 +19,7 @@
 			<ul class="nav justify-content-center gap-5 nav-underline">
 				<li class="nav-item"><a class="nav-link link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="${contextPath }/band/${bandRoomId}" style="padding-bottom: 1px">게시글</a></li>
 				<li class="nav-item"><a class="nav-link link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="${contextPath }/band/${bandRoomId}/album" style="padding-bottom: 1px">사진첩</a></li>
-				<li class="nav-item"><a class="nav-link link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="${contextPath }/band/${bandRoomId}/calendar"s style="padding-bottom: 1px">일정</a></li>
+				<li class="nav-item"><a class="nav-link link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="${contextPath }/band/${bandRoomId}/calendar" style="padding-bottom: 1px">일정</a></li>
 				<li class="nav-item"><a class="nav-link link-light link-offset-2 link-underline-opa city-25 link-underline-opacity-100-hover" href="#" style="padding-bottom: 1px">첨부</a></li>
 				<li class="nav-item"><a class="nav-link link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="${contextPath }/band/${bandRoomId}/member" style="padding-bottom: 1px">멤버</a></li>
 			</ul>
@@ -37,7 +37,7 @@
 					<small>${bandRoom.bandRoomDescription }</small>
 				</div>
 				<div class="mt-2">
-					<button type="button" id="write" class="py-2 border-0 w-100 text-center my-2 rounded-1 ${bandRoom.bandRoomColor }"  data-bs-toggle="modal" data-bs-target="#postWriteModal">글쓰기</button>
+					<button type="button" id="write" class="py-2 border-0 w-100 text-center my-2 rounded-1 ${bandRoom.bandRoomColor }" data-bs-toggle="modal" data-bs-target="#postWriteModal">글쓰기</button>
 				</div>
 				<div class="text-secondary border-bottom border-1 pb-2 lh-1">
 					<small>누구나 밴드를 검색해 찾을 수 있고, 밴드 소개와 게시글을 볼 수 있습니다.</small>
@@ -49,36 +49,29 @@
 				</c:if>
 			</div>
 			<!-- 2 -->
-			<div class="flex-grow-1 flex-column" style="min-width: 500px;">
-				<div class="d-flex align-items-center p-3 shadow-sm rounded-1" style="background-color: white;">
-					<div class="fs-5 fw-bold me-3">가입 신청자</div>
-					<div>${empty requests ? '' : requests.size() }</div>
-				</div>
-				<div class="mt-1 p-3 shadow-sm rounded-1" style="background-color: #F5F5F5;">
-					<div class="text-center text-secondary">
-						<small>가입신청을 확인해주세요. 한 달이 지난 가입신청은 자동 거절 됩니다.</small>
-					</div>
-				</div>
-				<div class="mt-1 p-3 shadow-sm rounded-1" style="background-color: white;">
-					<div class="mt-3">
-						<c:if test="${empty requests }">
-							<div class="h3 text-center" style="min-height: 600px; padding-top: 300px;">가입신청자가 없습니다.</div>
-						</c:if>
-						<c:forEach var="one" items="${requests }">
-							<div class="d-flex align-items-center border-bottom border-1 pb-3">
-								<div>
-									<img src="${fn:startsWith(one.profile.profileImageUrl, 'http') ? '' : contextPath }${one.profile.profileImageUrl }" class="rounded-circle" width="48" height="48">
-								</div>
-								<div class="flex-grow-1 ms-3 fw-bold">${one.profile.profileNickName }</div>
-								<div>
-									<button type="button" class="btn border border-1 py-1 px-2" data-value="${one.memberId }" data-type="accept" onclick="processRequest(event)">수락</button>
-								</div>
-								<div class="ms-1">
-									<button type="button" class="btn border border-1 py-1 px-2" data-value="${one.memberId }" data-type="reject" onclick="processRequest(event)">거절</button>
-								</div>
+			<div class="flex-grow-1 flex-column" id="wrap">
+				<div class="shadow-sm rounded-1" style="background-color: white;">
+					<div class="d-flex justify-content-between align-items-center p-4 border-bottom border-1">
+						<div class="d-flex align-items-center">
+							<div class="h3 fw-bold mb-0">${currentDate }</div>
+							<div class="btn-group ms-3">
+								<button type="button" class="border border-0 ${bandRoom.bandRoomColor }" onclick="location.href='${contextPath}/band/${bandRoom.bandRoomId }/calendar?currentDate=${prevDate }'"><i class="bi bi-caret-left-fill"></i></button>
+								<button type="button" class="border border-0 ${bandRoom.bandRoomColor }" onclick="location.href='${contextPath}/band/${bandRoom.bandRoomId }/calendar?currentDate=${nextDate }'"><i class="bi bi-caret-right-fill"></i></button>
 							</div>
-						</c:forEach>
+						</div>
+						<div>
+							<button type="button" class="border border-0 ${bandRoom.bandRoomColor } px-2 py-1" data-bs-toggle="modal" data-bs-target="#createSchedule">일정 만들기</button>
+						</div>
 					</div>
+					<c:forEach var="one" items="${schedules }">
+						<div class="d-flex align-items-center mx-3 py-3 border-bottom border-1">
+							<div class="me-4">
+								<div class="fs-5 fw-bold text-center"><fmt:formatDate value="${one.scheduleDate }" pattern="dd"/></div>
+								<div class="fs-6"><fmt:formatDate value="${one.scheduleDate }" pattern="E요일"/></div>
+							</div>
+							<div class="fs-5">${one.scheduleTitle }</div>
+						</div>
+					</c:forEach>
 				</div>
 			</div>
 			<!-- 3 -->
@@ -121,6 +114,44 @@
 			</div>
 		</div>
 	</div>
+	
+	<!-- postWrite Modal -->
+	<div class="modal fade" id="createSchedule" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" style="width: 600px;">
+			<div class="modal-content">
+				<div class="modal-header justify-content-center">
+					<button type="button" class="btn-close position-absolute" style="top: 10px; right: 10px;" data-bs-dismiss="modal" aria-label="Close"></button>
+					<div class="modal-title text-center position-relative" id="staticBackdropLabel">
+						<span class="fw-bold">일정 만들기</span>
+					</div>
+				</div>
+				<form action="${contextPath }/band/schedule/add" method="post">
+					<div class="modal-body">
+						<div>
+							<input type="text" name="scheduleTitle" placeholder="일정 제목" class="w-100 border border-1 rounded-1 p-2 my-2" />
+						</div>
+						<div>
+							<input type="text" name="scheduleDescription" placeholder="일정 설명" class="w-100 border border-1 rounded-1 p-2 my-2" />
+						</div>
+						<div class="d-flex align-items-center">
+							<div class="me-3">
+								날짜
+							</div>
+							<div class="flex-grow-1">
+								<input type="date" name="scheduleDate" class="w-100 rounded-1 border border-1 text-center p-2 my-2"/>
+							</div>
+							<input type="hidden" name="scheduleBandRoomId" value="${bandRoom.bandRoomId }"/>
+							<input type="hidden" name="scheduleMemberId" value="${member.memberId }"/>
+						</div>
+					</div>
+					<div class="modal-footer justify-content-center align-items-center">
+						<button type="submit" class="btn px-5 text-white" style="background-color: #000033;">완료</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 	<script>
 		document.querySelector("#images").onchange = function(e) {
@@ -164,27 +195,7 @@
 				}
 			});
 		}
-	
-		function processRequest(event) {
-			const xhr = new XMLHttpRequest();
-			xhr.open("post",
-					"${contextPath}/band/${bandRoom.bandRoomId}/applications",
-					true);
-			xhr.setRequestHeader("content-type",
-					"application/x-www-form-urlencoded");
-
-			let target = event.target;
-			xhr.send("type=" + target.dataset.type + "&memberId="
-					+ target.dataset.value);
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState == 4) {
-					var response = JSON.parse(xhr.responseText);
-					if (response.result == 'success') {
-
-					}
-				}
-			}
-		}
+		
 	</script>
 </body>
 </html>

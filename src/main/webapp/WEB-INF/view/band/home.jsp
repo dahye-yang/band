@@ -13,13 +13,13 @@
 </head>
 <c:set var="contextPath" value="${pageContext.servletContext.contextPath }" />
 <body>
-	<div class="position-relative" style="background-color: #F0F0F0;">
+	<div class="position-relative" style="min-height:100vh; background-color: #F0F0F0;">
 		<!-- nav 들어갈 자리 -->
 		<div class="sticky-top ${bandRoom.bandRoomColor }" style="height: 40px; font-size: 14px;">
 			<ul class="nav justify-content-center gap-5 nav-underline">
 				<li class="nav-item"><a class="nav-link link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="${contextPath }/band/${bandRoomId}" style="padding-bottom: 1px">게시글</a></li>
 				<li class="nav-item"><a class="nav-link link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="${contextPath }/band/${bandRoomId}/album" style="padding-bottom: 1px">사진첩</a></li>
-				<li class="nav-item"><a class="nav-link link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="#" style="padding-bottom: 1px">일정</a></li>
+				<li class="nav-item"><a class="nav-link link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="${contextPath }/band/${bandRoomId}/calendar" style="padding-bottom: 1px">일정</a></li>
 				<li class="nav-item"><a class="nav-link link-light link-offset-2 link-underline-opa city-25 link-underline-opacity-100-hover" href="#" style="padding-bottom: 1px">첨부</a></li>
 				<li class="nav-item"><a class="nav-link link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="${contextPath }/band/${bandRoomId}/member" style="padding-bottom: 1px">멤버</a></li>
 			</ul>
@@ -27,9 +27,7 @@
 
 		<div class="mx-auto d-flex align-items-start pt-3 " style="width: 1034px;">
 			<!-- 1 -->
-
 			<div class="pb-3 me-3 " style="width: 208px; height: 157px; position: sticky; top: 50px">
-
 				<img src="${contextPath }/${bandRoom.coverImageUrl}" alt="커버사진" style="width: 208px; height: 157px; background-color: white; overflow: hidden;" class="rounded-1 object-fit-cover">
 				<div class="h4 pt-2">${bandRoom.bandRoomName }</div>
 				<div class="mt-2">
@@ -133,10 +131,16 @@
 			</div>
 			<!-- 3 -->
 			<div class="pb-3 ms-3 " style="min-width: 208px; position: sticky; top: 50px">
-				<div>다가오는 일정</div>
-				<div>채팅</div>
-				<div>파일</div>
-				<div>최근 사진</div>
+				<div class="p-2 shadow-sm rounded-1" style="background-color: white;">
+					<div class="fw-bold border-bottom border-1 p-1"><small>다가오는 일정</small></div>
+					<div class="d-flex align-items-center mt-2" onclick="location.href='${contextPath}/band/${bandRoom.bandRoomId }/calendar'" style="cursor: pointer;">
+						<div class="ms-1">
+							<div class="fw-bold text-center"><fmt:formatDate value="${nextSchedule.scheduleDate }" pattern="dd"/></div>
+							<div class="text-center"><small><fmt:formatDate value="${nextSchedule.scheduleDate }" pattern="MM월"/></small></div>
+						</div>
+						<div class="flex-grow-1 fw-bold ms-3">${nextSchedule.scheduleTitle }</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
