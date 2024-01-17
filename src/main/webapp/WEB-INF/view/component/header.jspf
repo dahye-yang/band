@@ -13,6 +13,7 @@
 </head>
 <c:set var="contextPath" value="${pageContext.servletContext.contextPath }"></c:set>
 <body>
+
 	<div style="background-color: #F0F0F0; min-height:100vh;">
 		<div class="sticky-top ${bandRoom.bandRoomColor}">
 			<div>

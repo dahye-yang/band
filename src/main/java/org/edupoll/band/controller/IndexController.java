@@ -27,7 +27,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class IndexController {
 	
-	private final UserDao userDao;
 	private final BandMemberDao bandMemberDao;
 	private final ProfileDao profileDao;
 	private final BandRoomDao bandRoomDao;

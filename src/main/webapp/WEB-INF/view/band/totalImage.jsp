@@ -23,7 +23,7 @@
 					<small>누구나 밴드를 검색해 찾을 수 있고, 밴드 소개와 게시글을 볼 수 있습니다.</small>
 				</div>
 				<c:if test="${bandRoom.leader eq member.memberId }">
-					<div class="text-secondary mt-2" style="cursor:pointer;">
+					<div class="text-secondary mt-2" style="cursor:pointer;" onclick="location.href='${contextPath}/band/${bandRoom.bandRoomId }/setting/cover-update'">
 						<i class="bi bi-gear"></i> 밴드 설정
 					</div>
 				</c:if>
@@ -66,7 +66,8 @@
 					<div class="row row-cols-3" style="margin-left: 10px;width: 99%; margin-top: 18px">
 						<c:forEach var="one" items="${imageList}">
 							<div class="col position-relative" style="width: 190px; height: 190px; padding: 0.1rem">
-								<img alt="해당밴드전체사진" src="${contextPath }${one.imageUrl}" width="100%" height="100%">
+								<img alt="해당밴드전체사진" src="${contextPath }${one.imageUrl}" width="100%" height="100%"
+										style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#imageModal" data-url="${one.imageUrl }" onclick="imageInsert(event);">
 								<input class="position-absolute top-0 end-0" type="checkbox" id="checkInput" name="checkInput" value="${one.imageId}"style="margin-top: 8px; margin-right: 8px; display: none"/>
 								<input type="hidden" name="memberId" value="${one.imageMemberId }"/>
 							</div>
@@ -103,6 +104,15 @@
 		</div>
 	</div>
 </div>
+
+	<!-- image Modal -->
+	    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" 
+	    		style="background-color: rgba(0,0,0,0.75)">
+	        <div class="modal-dialog modal-dialog-centered justify-content-center" id="innerModal">
+	        
+	        </div>
+	    </div> 
+
 	<!-- 전체사진 image upload modal -->
 		
 		<div class="modal fade" id="imageUpload" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -189,6 +199,16 @@
 	
 	<script>
 		
+		function imageInsert(e) {
+	        const modal = document.querySelector("#innerModal");
+	        modal.innerHTML = '';
+	        
+	        const img = document.createElement("img");
+	        img.className="p-2 border"
+	        img.src = '${contextPath}' + e.target.dataset.url;
+	        modal.appendChild(img);
+	    } 
+
 		
 		document.querySelector("#deleteImage").onclick = function(e){
 		
