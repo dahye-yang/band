@@ -58,6 +58,13 @@ public class BandController {
 	public Schedule findNextSchedule() {
 		return scheduleDao.findNextSchedule();
 	}
+	
+	@ModelAttribute("profileImageUrl")
+	public String findProfileImageUrl(@SessionAttribute User logonUser) {
+		User user = userDao.findUserById(logonUser.getUserId());
+		List<Profile> profiles = profileDao.findProfileById(user.getUserId());
+		return profiles.get(0).getProfileImageUrl();
+	}
 
 	@GetMapping("/band/{bandRoomId}")
 	public String showBandRoom(@SessionAttribute User logonUser, @PathVariable String bandRoomId,
@@ -95,6 +102,13 @@ public class BandController {
 		Date now = new Date(System.currentTimeMillis());
 		SimpleDateFormat simpleformat = new SimpleDateFormat("yyyy년 MM월");
 		String nowdate = simpleformat.format(now);
+		
+		// 멤버 객체 보내주기
+		Map<String, Object> criteria = new HashMap<>();
+		criteria.put("memberBandRoomId", bandRoomId);
+		criteria.put("memberUserId", logonUser.getUserId());
+		BandMember member = bandMemberDao.findByRoomIdAndUserId(criteria);
+		model.addAttribute("member", member);
 
 		// 앨범 전체가지고오기
 		List<Album> albumList = albumDao.findByBandRoomId(bandRoomId);
@@ -176,11 +190,14 @@ public class BandController {
 		Album foundAlbum = albumDao.findByAlbumId(albumId);
 		model.addAttribute("foundAlbum", foundAlbum);
 		model.addAttribute("bandRoomId", bandRoomId);
-		
-		User user = userDao.findUserById(logonUser.getUserId());
-		List<Profile> profiles = profileDao.findProfileById(user.getUserId());
-		model.addAttribute("profileImageUrl", profiles.get(0).getProfileImageUrl());
+
 		model.addAttribute("albumId", albumId);
+		
+		Map<String, Object> criteria = new HashMap<>();
+		criteria.put("memberBandRoomId", bandRoomId);
+		criteria.put("memberUserId", logonUser.getUserId());
+		BandMember member = bandMemberDao.findByRoomIdAndUserId(criteria);
+		model.addAttribute("member", member);
 		
 		return "band/albumDetail";
 	}
@@ -204,9 +221,11 @@ public class BandController {
 			model.addAttribute("cntTotalImage", cntTotalImage);
 			model.addAttribute("bandRoomId", bandRoomId);	
 			
-			User user = userDao.findUserById(logonUser.getUserId());
-			List<Profile> profiles = profileDao.findProfileById(user.getUserId());
-			model.addAttribute("profileImageUrl", profiles.get(0).getProfileImageUrl());
+			Map<String, Object> criteria = new HashMap<>();
+			criteria.put("memberBandRoomId", bandRoomId);
+			criteria.put("memberUserId", logonUser.getUserId());
+			BandMember member = bandMemberDao.findByRoomIdAndUserId(criteria);
+			model.addAttribute("member", member);
 			
 			return "band/totalImage";
 		}
@@ -215,11 +234,6 @@ public class BandController {
 		@GetMapping("/band/{bandRoomId}/setting/cover-update")
 		public String showBandRoomSettingForm(@PathVariable String bandRoomId,
 											  @SessionAttribute User logonUser,Model model) {
-			
-			
-			User user = userDao.findUserById(logonUser.getUserId());
-			List<Profile> profiles = profileDao.findProfileById(user.getUserId());
-			model.addAttribute("profileImageUrl", profiles.get(0).getProfileImageUrl());
 			
 			BandRoom bandRoom = bandRoomDao.findByBandRoomId(bandRoomId);
 			model.addAttribute("bandRoom", bandRoom);

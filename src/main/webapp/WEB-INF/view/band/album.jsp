@@ -4,7 +4,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ include file="/WEB-INF/view/component/header.jspf"%>
 
-
 	<div class="mx-auto d-flex align-items-start pt-3" style="width: 1034px;">
 		<!-- 1 -->		
 			<div class="pb-3 me-3 " style="width: 208px; height: 157px; position: sticky; top: 115px;">
@@ -33,7 +32,6 @@
 		<!-- 2 -->
 		<c:choose>
 			<c:when test="${logonUser ne null }">
-			
 				<div class="flex-grow-1 flex-column shadow-sm rounded-1" style="position:sticky;  ;min-width: 500px; background-color: white">
 					<div class="d-flex justify-content-between" style="height: 65px; background-color: white;">
 						<div class="ps-3 pt-3">
@@ -147,11 +145,17 @@
 			</c:otherwise>
 		</c:choose>
 		<!-- 3 -->
-		<div class="pb-3 ms-3 " style="min-width: 208px; position: sticky; top: 115px;">
-			<div>다가오는 일정</div>
-			<div>채팅</div>
-			<div>파일</div>
-			<div>최근 사진</div>
+		<div class="pb-3 ms-3 " style="min-width: 208px; position: sticky; top: 115px">
+			<div class="p-2 shadow-sm rounded-1" style="background-color: white;">
+				<div class="fw-bold border-bottom border-1 p-1"><small>다가오는 일정</small></div>
+				<div class="d-flex align-items-center mt-2" onclick="location.href='${contextPath}/band/${bandRoom.bandRoomId }/calendar'" style="cursor: pointer;">
+					<div class="ms-1">
+						<div class="fw-bold text-center"><fmt:formatDate value="${nextSchedule.scheduleDate }" pattern="dd"/></div>
+						<div class="text-center"><small><fmt:formatDate value="${nextSchedule.scheduleDate }" pattern="MM월"/></small></div>
+					</div>
+					<div class="flex-grow-1 fw-bold ms-3">${nextSchedule.scheduleTitle }</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
