@@ -180,7 +180,7 @@
 				if (xhr.readyState == 4) {
 					var response = JSON.parse(xhr.responseText);
 					if (response.result == 'success') {
-
+						target.parentNode.parentNode.parentNode.removeChild(target.parentNode.parentNode);
 					}
 				}
 			}
