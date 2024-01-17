@@ -119,7 +119,7 @@ public class SignController {
 					.profileImageUrl(kakaoUserInfo.getProfile().getProfileImage()).build();
 			profileDao.profileSave(p);
 
-			session.setAttribute("logonAccount", one);
+			session.setAttribute("logonUser", one);
 
 		} else {
 			user.setAccessToken(oAuthToken.getAccess_token());
@@ -129,7 +129,7 @@ public class SignController {
 			System.out.println();
 			userDao.userUpdate(user);
 
-			session.setAttribute("logonAccount", user);
+			session.setAttribute("logonUser", user);
 
 		}
 		return "redirect:/";
