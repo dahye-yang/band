@@ -1,6 +1,8 @@
 package org.edupoll.band.model;
 
-import java.sql.Date;
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,10 +15,9 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Album {
-	private int albumId;
-	private String albumBandRoomId;
-	private String albumTitle;
-	private Date albumMakeAt;
-	private String imageUrl;
+public class PostUpdate {
+	private String content;
+	private int postId;
+	private List<String> imageUrls;
+	private MultipartFile[] images;
 }

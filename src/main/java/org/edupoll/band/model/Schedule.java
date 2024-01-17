@@ -13,10 +13,13 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Album {
-	private int albumId;
-	private String albumBandRoomId;
-	private String albumTitle;
-	private Date albumMakeAt;
-	private String imageUrl;
+public class Schedule {
+	private int scheduleId;
+	private String scheduleTitle;
+	private String scheduleDescription;
+	private Date scheduleDate;
+	private int scheduleMemberId;
+	private String scheduleBandRoomId;
+	
+	private BandMember member;
 }

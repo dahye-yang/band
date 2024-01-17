@@ -16,7 +16,9 @@ import lombok.Setter;
 public class Comment {
 	private int commentId;
 	private int commentPostId;
-	private int commetMemberId;
+	private int commentMemberId;
 	private String message;
 	private Date commentWriteAt;
+	
+	private BandMember member;
 }

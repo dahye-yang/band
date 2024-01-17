@@ -2,51 +2,74 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ include file="/WEB-INF/view/component/header.jspf"%>
-
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>band</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="${pageContext.servletContext.contextPath }/resource/style/style.css">
+</head>
+<c:set var="contextPath" value="${pageContext.servletContext.contextPath }" />
+<body>
+	<div class="position-relative" style="min-height: 100vh; background-color: #F0F0F0;">
+		<div class="sticky-top" style="background-color: #F0F0F0">
+			<div class="mx-auto" style="width: 1034px;">
+				<div class="">
+					<div class="d-flex justify-content-between" style="height: 55px;">
+						<div class="d-flex justify-content-start gap-4 align-items-center">
+							<div style="font-size: 20px; font-weight: bold; margin-top: 6px;">
+								<a class="navbar-brand" href="${contextPath }/index"> <img alt="밴드로고" src="${contextPath }/resource/band.png" width="80px" height="40">
+								</a>
+							</div>
+							<div class="input-group">
+								<input type="text" class="form-control" placeholder="밴드, 페이지, 게시글 검색" aria-label="Recipient's username" aria-describedby="button-addon2" style="font-size: 12px; width: 260px; height: 30px; margin-top: 5px">
+								<button class="btn btn-outline-secondary" type="button" id="button-addon2" style="font-size: 12px; height: 29px; margin-top: 5px; border: none; background-color: white">
+									<i class="bi bi-search"></i>
+								</button>
+							</div>
+						</div>
+						<div class="d-flex justify-content-end gap-4 align-items-center" style="color: black;">
+							<div style="font-size: 13px">새글 피드</div>
+							<div style="font-size: 13px">찾기</div>
+							<div>
+								<i class="bi bi-bell-fill"></i>
+							</div>
+							<div>
+								<i class="bi bi-chat-dots-fill"></i>
+							</div>
+							<div class="dropdown">
+								<button class="btn btn-secondary dropdown-toggle rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 35px; height: 50px; background-color: transparent; border: none;">
+									<img src="${fn:startsWith(profileImageUrl, '/resource') ? contextPath:'' }${profileImageUrl}" class="rounded-circle" alt="프로필" width="35" height="35">
+								</button>
+								<ul class="dropdown-menu">
+									<li><a class="dropdown-item" href="${contextPath }/my/profile" style="font-size: 13px">내 정보</a></li>
+									<li><a class="dropdown-item" href="${contextPath }/my/post" style="font-size: 13px">내가 쓴 글</a></li>
+									<li><a class="dropdown-item" href="${contextPath }/signout" style="font-size: 13px">로그아웃</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="mx-auto d-flex align-items-start pt-3 " style="width: 1034px;">
 			<!-- 1 -->
-			<div class="pb-3 me-3 " style="width: 208px; height: 157px; position: sticky; top: 115px">
-				<img src="${contextPath }/${bandRoom.coverImageUrl}" alt="커버사진" style="width: 208px; height: 157px; background-color: white; overflow: hidden;" class="rounded-1 object-fit-cover">
-				<div class="h4 pt-2">${bandRoom.bandRoomName }</div>
-				<div class="mt-2">
-					멤버 ${memberCnt } ㆍ <i class="bi bi-plus-circle"></i> 초대
-				</div>
-				<div class="mt-2">
-					<small>${bandRoom.bandRoomDescription }</small>
-				</div>
-				<div class="mt-2">
-					<c:choose>
-						<c:when test="${member.memberStatus eq 'accept' }">
-							<button type="button" id="write" class="py-2 border-0 w-100 text-center my-2 rounded-1 ${bandRoom.bandRoomColor }"  data-bs-toggle="modal" data-bs-target="#postWriteModal">글쓰기</button>
-						</c:when>
-						<c:when test="${member.memberStatus eq 'request' }">
-							<button type="button" class="py-2 border-0 w-100 text-center my-2 rounded-1 ${bandRoom.bandRoomColor }" style="cursor:default;">가입대기중</button>
-						</c:when>
-						<c:otherwise>
-							<button type="button" class="py-2 border-0 w-100 text-center my-2 rounded-1 ${bandRoom.bandRoomColor }" data-bs-toggle="modal" data-bs-target="#joinBandModal">가입신청하기</button>
-						</c:otherwise>
-					</c:choose>
-				</div>
-				<div class="text-secondary border-bottom border-1 pb-2 lh-1">
-					<small>누구나 밴드를 검색해 찾을 수 있고, 밴드 소개와 게시글을 볼 수 있습니다.</small>
-				</div>
-				<c:if test="${bandRoom.leader eq member.memberId }">
-					<div class="text-secondary mt-2" style="cursor:pointer;" onclick="location.href='${contextPath}/band/${bandRoom.bandRoomId }/setting/cover-update'">
-						<i class="bi bi-gear"></i> 밴드 설정
-					</div>
-				</c:if>
+			<div class="pb-3 me-3 " style="width: 208px; height: 157px; position: sticky; top: 65px">
+				<ul class="list-group" style="width: 208px;">
+					<li class="list-group-item fw-bold fs-5">가입된 밴드</li>
+					<c:forEach var="one" items="${bandrooms }">
+						<li class="list-group-item" onclick="location.href='${contextPath}/band/${one.bandRoomId}'" style="cursor: pointer;">${one.bandRoomName }</li>
+					</c:forEach>
+				</ul>
 			</div>
 			<!-- 2 -->
 			<div class="flex-grow-1 flex-column" style="min-width: 500px;" id="wrap">
-				<div>
-					<input type="text" placeholder="글 내용,#태그,@작성자 검색" class="w-100 border-0 px-3 py-2 shadow-sm rounded-1" style="outline: none;" />
-				</div>
-				<div class="mt-3 p-3 text-secondary shadow-sm rounded-1" style="height: 100px; background-color: white; cursor: pointer;" onclick="document.querySelector('#write').click();">
-					<p>새로운 소식을 남겨보세요.</p>
-				</div>
+				<div class="p-3 shadow-sm rounded-1 fw-bold" style="background-color: white;">내가 쓴 글</div>
 				<c:forEach var="one" items="${posts }">
 					<div class="mt-3 p-3 shadow-sm rounded-1" style="min-height: 100px; background-color: white;">
+						<div class="fw-bold m-2 mb-4 py-2 border-bottom border-1" onclick="location.href='${contextPath}/band/${one.bandRoom.bandRoomId}'" style="cursor: pointer;">${one.bandRoom.bandRoomName }</div>
 						<div class="d-flex align-items-center">
 							<div>
 								<img src="${fn:startsWith(one.profile.profileImageUrl, 'http') ? '' : contextPath }${one.profile.profileImageUrl }" width="48" height="48" class="rounded-circle me-3">
@@ -72,7 +95,7 @@
 								<c:forEach var="image" items="${one.images }" varStatus="vs">
 									<div class="${vs.last and vs.count %2 ne 0? 'col-12' : 'col-6' }" style="padding: 1px;">
 										<div class="card rounded-1 border border-1" style="height: 200px;">
-											<img src="${contextPath }${image.imageUrl }" class="h-100 object-fit-cover overflow-hidden" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#imageModal" data-url="${image.imageUrl }" onclick="imageInsert(event);">
+											<img src="${contextPath }${image.imageUrl }" class="h-100 object-fit-cover overflow-hidden">
 										</div>
 									</div>
 								</c:forEach>
@@ -109,81 +132,12 @@
 				</c:forEach>
 			</div>
 			<!-- 3 -->
-			<div class="pb-3 ms-3 " style="min-width: 208px; position: sticky; top: 115px">
-				<div class="p-2 shadow-sm rounded-1" style="background-color: white;">
-					<div class="fw-bold border-bottom border-1 p-1"><small>다가오는 일정</small></div>
-					<div class="d-flex align-items-center mt-2" onclick="location.href='${contextPath}/band/${bandRoom.bandRoomId }/calendar'" style="cursor: pointer;">
-						<div class="ms-1">
-							<div class="fw-bold text-center"><fmt:formatDate value="${nextSchedule.scheduleDate }" pattern="dd"/></div>
-							<div class="text-center"><small><fmt:formatDate value="${nextSchedule.scheduleDate }" pattern="MM월"/></small></div>
-						</div>
-						<div class="flex-grow-1 fw-bold ms-3">${nextSchedule.scheduleTitle }</div>
-					</div>
-				</div>
-			</div>
+			<div class="pb-3 ms-3 " style="min-width: 208px; position: sticky; top: 65px"></div>
 		</div>
 	</div>
 
-	<!-- ========================================================================================================== -->
+	<!-- ================================================================================================================================= -->
 
-	<!-- join Modal -->
-	<div class="modal fade" id="joinBandModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" style="width: 360px;">
-			<div class="modal-content" style="height: 500px;">
-				<div class="modal-header">
-					<button type="button" class="btn-close position-absolute" style="top: 10px; right: 10px;" data-bs-dismiss="modal" aria-label="Close"></button>
-					<div class="modal-title text-center position-relative" id="staticBackdropLabel">
-						<span class="h3">${bandRoom.bandRoomName }</span><br /> <small>이 밴드에 사용할 프로필을 선택하세요.<br />선택한 프로필의 사진과 스토리를 이 밴드 멤버들도 볼 수 있게 돼요.
-						</small>
-					</div>
-				</div>
-				<form action="${contextPath }/band/${bandRoom.bandRoomId}/request" method="post">
-					<div class="modal-body" style="min-height: 270px;">
-						<c:forEach var="one" items="${profiles }" varStatus="status">
-							<div class="d-flex align-items-center">
-								<div>
-									<img src="${fn:startsWith(one.profileImageUrl, 'http') ? '' : contextPath }${one.profileImageUrl }" class="rounded-circle" width="32" height="32">
-								</div>
-								<div class="flex-grow-1 ms-3">${one.profileNickName }</div>
-								<input type="radio" name="profileId" value="${one.profileId }" ${status.first ? 'checked' :'' } />
-							</div>
-						</c:forEach>
-					</div>
-					<div class="modal-footer justify-content-center">
-						<button type="submit" class="btn" style="background-color: ${bandRoom.bandRoomColor};">밴드 가입하기</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	<!-- postWrite Modal -->
-	<div class="modal fade" id="postWriteModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" style="width: 600px;">
-			<div class="modal-content" style="min-height: 500px;">
-				<div class="modal-header justify-content-center">
-					<button type="button" class="btn-close position-absolute" style="top: 10px; right: 10px;" data-bs-dismiss="modal" aria-label="Close"></button>
-					<div class="modal-title text-center position-relative" id="staticBackdropLabel">
-						<span class="fw-bold">글쓰기</span>
-					</div>
-				</div>
-				<form action="${contextPath }/band/post/add" method="post" enctype="multipart/form-data">
-					<div class="modal-body" style="min-height: 320px;">
-						<textarea class="w-100 p-3 border border-1" style="resize: none; outline: none; height: 320px" placeholder="새로운 소식을 남겨보세요." name="content"></textarea>
-						<div class="d-flex" style="overflow-x: auto;" id="imageView">
-							<!-- script로 채워줄 부분 -->
-						</div>
-					</div>
-					<div class="modal-footer justify-content-between align-items-center">
-						<div>
-							<i class="bi bi-image fs-3 ps-1" style="cursor: pointer;" onclick="document.querySelector('#images').click();"></i>
-						</div>
-						<input type="file" id="images" name="images" style="display: none;" multiple accept="image/**" /> <input type="hidden" name="postMemberId" value="${member.memberId }" /> <input type="hidden" name="postBandRoomId" value="${bandRoom.bandRoomId }" />
-						<button type="submit" class="btn px-5 text-white" style="background-color: #000033;">게시</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
 	<!-- postUpdate Modal -->
 	<div class="modal fade" id="postUpdateModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" style="width: 600px;">
@@ -213,25 +167,9 @@
 			</div>
 		</div>
 	</div>
-	<!-- image Modal -->
-	<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" 
-	style="background-color: rgba(0,0,0,0.75)">
-		<div class="modal-dialog modal-dialog-centered justify-content-center" id="innerModal">
-			
-		</div>
-	</div>
+	<!-- ========================================================================================================== -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 	<script>
-		function imageInsert(e) {
-			const modal = document.querySelector("#innerModal");
-			modal.innerHTML = '';
-			
-			const img = document.createElement("img");
-			img.className="p-2 border"
-			img.src = '${contextPath}' + e.target.dataset.url;
-			modal.appendChild(img);
-		}
-		
 		document.querySelector("#images").onchange = function(e) {
 			
 			// 이전에 선택되어있던 것들 삭제
@@ -359,17 +297,15 @@
 		}
 		
 		function deletePost(e) {
-			if(window.confirm("게시물을 삭제하시겠습니까?")) {
-				const xhr = new XMLHttpRequest();
-				xhr.open("delete", "${contextPath}/band/post/delete?postId=" + e.target.dataset.postId, true);
-				xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
-				xhr.send();
-				xhr.onreadystatechange = function() {
-					if(xhr.readyState == 4) {
-						var response = JSON.parse(xhr.responseText);
-						if (response.result == 'success') {
-							document.querySelector("#wrap").removeChild(e.target.parentElement.parentElement.parentElement);
-						}
+			const xhr = new XMLHttpRequest();
+			xhr.open("delete", "${contextPath}/band/post/delete?postId=" + e.target.dataset.postId, true);
+			xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+			xhr.send();
+			xhr.onreadystatechange = function() {
+				if(xhr.readyState == 4) {
+					var response = JSON.parse(xhr.responseText);
+					if (response.result == 'success') {
+						document.querySelector("#wrap").removeChild(e.target.parentElement.parentElement.parentElement);
 					}
 				}
 			}
@@ -446,23 +382,18 @@
 			let postId = input.dataset.postId;
 			let memberId = input.dataset.memberId;
 			let message = input.value;
-			if (message.trim() == '' || message == null) {
-				window.alert("댓글을 입력해주세요");
-				e.preventDefault();
-			} else {
 			
-				const xhr = new XMLHttpRequest();
-				xhr.open("post", "${contextPath}/band/comment/add", true);
-				xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
-				xhr.send("commentPostId=" + postId + "&commentMemberId=" + memberId + "&message=" + message);
-				xhr.onreadystatechange = function() {
-					if (xhr.readyState == 4) {
-						var response = JSON.parse(xhr.responseText);
-						if (response.result == 'success') {
-							e.target.parentElement.parentElement.parentElement.style.display = 'none';
-							input.value='';
-							
-						}
+			const xhr = new XMLHttpRequest();
+			xhr.open("post", "${contextPath}/band/comment/add", true);
+			xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+			xhr.send("commentPostId=" + postId + "&commentMemberId=" + memberId + "&message=" + message);
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState == 4) {
+					var response = JSON.parse(xhr.responseText);
+					if (response.result == 'success') {
+						e.target.parentElement.parentElement.parentElement.style.display = 'none';
+						input.value='';
+						
 					}
 				}
 			}

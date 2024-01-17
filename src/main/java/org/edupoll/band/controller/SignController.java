@@ -252,7 +252,7 @@ public class SignController {
 	public String proceedSignout(HttpSession session) {
 
 		session.invalidate();
-		return "redirect:/index";
+		return "redirect:/indexhome";
 	}
 
 }
