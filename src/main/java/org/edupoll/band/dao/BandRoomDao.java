@@ -16,4 +16,7 @@ public interface BandRoomDao {
 	public Integer findLeader(String bandRoomId);
 	
 	public List<BandRoom> findJoinedBandRoom(String userId);
+
+	public List<BandRoom> findBandRoomNotIncludeByUserId(String userId);
+
 }

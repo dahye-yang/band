@@ -1,10 +1,13 @@
 package org.edupoll.band.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.edupoll.band.dao.AlbumDao;
 import org.edupoll.band.dao.BandMemberDao;
@@ -13,9 +16,11 @@ import org.edupoll.band.dao.ImageDao;
 import org.edupoll.band.dao.PostDao;
 import org.edupoll.band.dao.ProfileDao;
 import org.edupoll.band.dao.ScheduleDao;
+import org.edupoll.band.dao.UserDao;
 import org.edupoll.band.model.Album;
 import org.edupoll.band.model.BandMember;
 import org.edupoll.band.model.BandRoom;
+import org.edupoll.band.model.CreatBandRoom;
 import org.edupoll.band.model.Image;
 import org.edupoll.band.model.Post;
 import org.edupoll.band.model.Profile;
@@ -47,12 +52,12 @@ public class BandController {
 	private final AlbumDao albumDao;
 	private final ImageDao imageDao;
 	private final ScheduleDao scheduleDao;
-	
+	private final UserDao userDao;
+  
 	@ModelAttribute("nextSchedule")
 	public Schedule findNextSchedule() {
 		return scheduleDao.findNextSchedule();
 	}
-	
 
 	@GetMapping("/band/{bandRoomId}")
 	public String showBandRoom(@SessionAttribute User logonUser, @PathVariable String bandRoomId,
@@ -85,7 +90,7 @@ public class BandController {
 	// 사진첩 메인
 	@GetMapping("/band/{bandRoomId}/album")
 	public String showAlbum(@PathVariable String bandRoomId,
-							@SessionAttribute(required = false) User logonUser ,Model model) {
+							@SessionAttribute User logonUser ,Model model) {
 		
 		Date now = new Date(System.currentTimeMillis());
 		SimpleDateFormat simpleformat = new SimpleDateFormat("yyyy년 MM월");
@@ -106,11 +111,15 @@ public class BandController {
 		List<Image> albumImageList = imageDao.findAllByBandRoomId(bandRoomId);
 
 		BandRoom bandRoom = bandRoomDao.findByBandRoomId(bandRoomId);
+		model.addAttribute("bandRoom", bandRoom);
+		
+		User user = userDao.findUserById(logonUser.getUserId());
+		List<Profile> profiles = profileDao.findProfileById(user.getUserId());
+		model.addAttribute("profileImageUrl", profiles.get(0).getProfileImageUrl());
 
 		model.addAttribute("albumList", albumList);
 		model.addAttribute("imageList", imageList);
 		model.addAttribute("albumImageList", albumImageList);
-		model.addAttribute("bandRoom", bandRoom);
 		model.addAttribute("now", nowdate);
 		model.addAttribute("logonUser", logonUser);
 		
@@ -122,9 +131,7 @@ public class BandController {
 	public String createAlbum(@PathVariable String bandRoomId,@SessionAttribute User logonUser ,
 							  @RequestParam String albumname,@RequestParam String confirm
 							  ,Model model) {
-//		System.out.println("albumname---> "+albumname);
-//		System.out.println("bandRoomId---> "+bandRoomId);
-//		System.out.println("confirm---> "+confirm);
+
 		Map<String, Object> memberMap = new HashMap<>();
 		memberMap.put("memberBandRoomId", bandRoomId);
 		memberMap.put("memberUserId", logonUser.getUserId());
@@ -143,8 +150,6 @@ public class BandController {
 		Album one = Album.builder().albumBandRoomId(bandRoomId).albumTitle(albumname).build();
 		albumDao.saveAlbum(one);
 
-		BandRoom bandRoom = bandRoomDao.findByBandRoomId(bandRoomId);
-		model.addAttribute("bandroom", bandRoom);
 		// 해당 앨범으로 보내준다아아....
 		// one.albumId로 앨범상세페이지 보내주기
 		return "redirect:/band/" + bandRoomId + "/album/" + one.getAlbumId();
@@ -152,7 +157,7 @@ public class BandController {
 
 	// 앨범 디테일 창
 	@GetMapping("/band/{bandRoomId}/album/{albumId}")
-	public String showAlbumDetail(@PathVariable int albumId,
+	public String showAlbumDetail(@PathVariable int albumId,@SessionAttribute User logonUser ,
 									@PathVariable String bandRoomId, Model model) {
 		
 		List<Image> albumAllImages = imageDao.findAllByAlbumId(albumId);
@@ -165,15 +170,25 @@ public class BandController {
 		int cntAlbumTotal = imageDao.countImageAlbumTotal(albumId);
 		model.addAttribute("cntAlbumTotal", cntAlbumTotal);
 		
+		BandRoom bandRoom = bandRoomDao.findByBandRoomId(bandRoomId);
+		model.addAttribute("bandRoom", bandRoom);
+		
 		Album foundAlbum = albumDao.findByAlbumId(albumId);
 		model.addAttribute("foundAlbum", foundAlbum);
 		model.addAttribute("bandRoomId", bandRoomId);
+		
+		User user = userDao.findUserById(logonUser.getUserId());
+		List<Profile> profiles = profileDao.findProfileById(user.getUserId());
+		model.addAttribute("profileImageUrl", profiles.get(0).getProfileImageUrl());
+		model.addAttribute("albumId", albumId);
+		
 		return "band/albumDetail";
 	}
   
 	// 앨범 전체사진 디테일 창
 		@GetMapping("/band/{bandRoomId}/album/total")
-		public String showAlbumTotalDetail(@PathVariable String bandRoomId, Model model) {
+		public String showAlbumTotalDetail(@PathVariable String bandRoomId,
+											@SessionAttribute User logonUser ,Model model) {
 			
 			BandRoom bandRoom = bandRoomDao.findByBandRoomId(bandRoomId);
 			model.addAttribute("bandRoom", bandRoom);
@@ -188,7 +203,64 @@ public class BandController {
 			int cntTotalImage = imageDao.countImageTotal(bandRoomId);
 			model.addAttribute("cntTotalImage", cntTotalImage);
 			model.addAttribute("bandRoomId", bandRoomId);	
+			
+			User user = userDao.findUserById(logonUser.getUserId());
+			List<Profile> profiles = profileDao.findProfileById(user.getUserId());
+			model.addAttribute("profileImageUrl", profiles.get(0).getProfileImageUrl());
+			
 			return "band/totalImage";
 		}
+		
+		// 밴드 수정폼
+		@GetMapping("/band/{bandRoomId}/setting/cover-update")
+		public String showBandRoomSettingForm(@PathVariable String bandRoomId,
+											  @SessionAttribute User logonUser,Model model) {
+			
+			
+			User user = userDao.findUserById(logonUser.getUserId());
+			List<Profile> profiles = profileDao.findProfileById(user.getUserId());
+			model.addAttribute("profileImageUrl", profiles.get(0).getProfileImageUrl());
+			
+			BandRoom bandRoom = bandRoomDao.findByBandRoomId(bandRoomId);
+			model.addAttribute("bandRoom", bandRoom);
+			
+			return "setting/cover-update";
+		}
+		// 밴드 수정페이지
+		@PostMapping("/band/{bandRoomId}/setting/cover-update")
+
+		public String updateBandRoom(@PathVariable String bandRoomId ,
+									@ModelAttribute CreatBandRoom createBandRoom ,@SessionAttribute User logonUser
+									,@RequestParam String coverImageUrl ,Model model) throws IllegalStateException, IOException {
+			
+			String uuid = UUID.randomUUID().toString();
+			String[] uuids = uuid.split("-");
+
+			String imageUrl;
+			// System.out.println("데이터 넘어온것 확인--> "+createBandRoom.getBandRoomName());
+			if (coverImageUrl.startsWith("http")) {
+				String[] a = coverImageUrl.split("8080/band");
+				// System.out.println(a[1]);
+				imageUrl = a[1];
+			} else {
+				imageUrl = "\\band\\upload\\coverImage\\" + uuids[0].toUpperCase() + "\\img.jpg";
+			}
+			if (!createBandRoom.getBandimage().isEmpty()) {
+				File dir = new File("c:\\band\\upload\\coverImage\\", uuids[0].toUpperCase());
+				dir.mkdirs();
+				File target = new File(dir, "img.jpg");
+				createBandRoom.getBandimage().transferTo(target);
+			}
+						
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("bandRoomId", bandRoomId);
+			map.put("bandRoomName", createBandRoom.getBandRoomName());
+			map.put("coverImageUrl", imageUrl);
+			map.put("bandRoomColor", createBandRoom.getBandRoomColor());
+			bandRoomDao.update(map);
+			
+			return "redirect:/band/"+bandRoomId;
+		}
+		
 
 }
