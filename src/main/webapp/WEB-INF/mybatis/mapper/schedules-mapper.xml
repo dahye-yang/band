@@ -29,11 +29,12 @@
 	<select id="findCurrentMonthSchedule" resultMap="scheduleWithMember">
 		select * from schedules s
 			left join bandmembers m on s.schedule_member_id = m.member_id
-			where to_char(schedule_date, 'yyyy-MM') like #{currentDate}
+			where to_char(s.schedule_date, 'yyyy-MM') like #{currentDate}
+			and s.schedule_bandroom_id = #{scheduleBandRoomId}
 	</select>
 	
 	<select id="findNextSchedule" resultType="schedule">
-		select * from (select * from schedules where schedule_date > sysdate order by schedule_date asc) where rownum &lt;= 1
+		select * from (select * from schedules where schedule_date > sysdate and schedule_bandroom_id = #{scheduleBandRoomId} order by schedule_date asc) where rownum &lt;= 1
 	</select>
 
 </mapper>

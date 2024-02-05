@@ -52,11 +52,6 @@ public class BandController {
 	private final ScheduleDao scheduleDao;
 	private final UserDao userDao;
 
-	@ModelAttribute("nextSchedule")
-	public Schedule findNextSchedule() {
-		return scheduleDao.findNextSchedule();
-	}
-
 	@ModelAttribute("profileImageUrl")
 	public String findProfileImageUrl(@SessionAttribute User logonUser) {
 		User user = userDao.findUserById(logonUser.getUserId());
@@ -67,6 +62,9 @@ public class BandController {
 	// 밴드룸 메인 페이지
 	@GetMapping("/band/{bandRoomId}")
 	public String showBandRoom(@SessionAttribute User logonUser, @PathVariable String bandRoomId, Model model) {
+		
+		Schedule nextSchedule = scheduleDao.findNextSchedule(bandRoomId);
+		model.addAttribute("nextSchedule", nextSchedule);
 
 		Map<String, Object> criteria = new HashMap<>();
 		criteria.put("memberBandRoomId", bandRoomId);
@@ -95,6 +93,9 @@ public class BandController {
 	// 전체사진 디테일 창
 	@GetMapping("/band/{bandRoomId}/album/total")
 	public String showAlbumTotalDetail(@PathVariable String bandRoomId, @SessionAttribute User logonUser, Model model) {
+		
+		Schedule nextSchedule = scheduleDao.findNextSchedule(bandRoomId);
+		model.addAttribute("nextSchedule", nextSchedule);
 
 		BandRoom bandRoom = bandRoomDao.findByBandRoomId(bandRoomId);
 		model.addAttribute("bandRoom", bandRoom);

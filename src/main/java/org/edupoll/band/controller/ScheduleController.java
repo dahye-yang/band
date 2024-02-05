@@ -47,11 +47,6 @@ public class ScheduleController {
 		return profiles.get(0).getProfileImageUrl();
 	}
 
-	@ModelAttribute("nextSchedule")
-	public Schedule findNextSchedule() {
-		return scheduleDao.findNextSchedule();
-	}
-
 	// 일정 페이지
 	@GetMapping("/{bandRoomId}/calendar")
 	public String showCalender(@RequestParam(required = false) String currentDate, @PathVariable String bandRoomId,
@@ -62,6 +57,9 @@ public class ScheduleController {
 			LocalDate todayLocalDate = today.toLocalDate();
 			currentDate = todayLocalDate.toString().substring(0, 7);
 		}
+		
+		Schedule nextSchedule = scheduleDao.findNextSchedule(bandRoomId);
+		model.addAttribute("nextSchedule", nextSchedule);
 
 		Date parsedMonth = Date.valueOf(currentDate + "-01");
 		LocalDate currentMonth = parsedMonth.toLocalDate();
@@ -73,10 +71,13 @@ public class ScheduleController {
 		LocalDate prevMonth = currentMonth.minusMonths(1);
 		model.addAttribute("prevDate", prevMonth.toString().substring(0, 7));
 
-		List<Schedule> schedules = scheduleDao.findCurrentMonthSchedule(currentDate);
+		Map<String, Object> criteria = new HashMap<>();
+		criteria.put("scheduleBandRoomId", bandRoomId);
+		criteria.put("currentDate", currentDate);
+		List<Schedule> schedules = scheduleDao.findCurrentMonthSchedule(criteria);
 		model.addAttribute("schedules", schedules);
 
-		Map<String, Object> criteria = new HashMap<>();
+		criteria.clear();
 		criteria.put("memberBandRoomId", bandRoomId);
 		criteria.put("memberUserId", logonUser.getUserId());
 		BandMember member = bandMemberDao.findByRoomIdAndUserId(criteria);

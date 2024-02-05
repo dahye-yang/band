@@ -52,15 +52,14 @@ public class AlbumController {
 	private final UserDao userDao;
 	private final ScheduleDao scheduleDao;
 	
-	@ModelAttribute("nextSchedule")
-	public Schedule findNextSchedule() {
-		return scheduleDao.findNextSchedule();
-	}
-	
 	// 사진첩 메인
 	@GetMapping("/band/{bandRoomId}/album")
 	public String showAlbum(@PathVariable String bandRoomId,
 							@SessionAttribute User logonUser ,Model model) {
+		
+		Schedule nextSchedule = scheduleDao.findNextSchedule(bandRoomId);
+		model.addAttribute("nextSchedule", nextSchedule);
+		
 		// 생성일자? 최근사진 업로드시기?
 		Date now = new Date(System.currentTimeMillis());
 		SimpleDateFormat simpleformat = new SimpleDateFormat("yyyy년 MM월");
@@ -135,6 +134,9 @@ public class AlbumController {
 	@GetMapping("/band/{bandRoomId}/album/{albumId}")
 	public String showAlbumDetail(@PathVariable int albumId,@SessionAttribute User logonUser ,
 									@PathVariable String bandRoomId, Model model) {
+		
+		Schedule nextSchedule = scheduleDao.findNextSchedule(bandRoomId);
+		model.addAttribute("nextSchedule", nextSchedule);
 		
 		List<Image> albumAllImages = imageDao.findAllByAlbumId(albumId);
 		model.addAttribute("albumAllImages", albumAllImages);

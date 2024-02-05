@@ -47,11 +47,6 @@ public class MemberController {
 		return profiles.get(0).getProfileImageUrl();
 	}
 	
-	@ModelAttribute("nextSchedule")
-	public Schedule findNextSchedule() {
-		return scheduleDao.findNextSchedule();
-	}
-	
 	// 가입신청
 	@PostMapping("/{bandRoomId}/request")
 	public String proceedBandSign(@SessionAttribute User logonUser, @PathVariable String bandRoomId,
@@ -84,6 +79,9 @@ public class MemberController {
 	@GetMapping("/{bandRoomId}/applications")
 	public String showRequests(@SessionAttribute(required = false) User logonUser, @PathVariable String bandRoomId,
 			Model model) {
+		
+		Schedule nextSchedule = scheduleDao.findNextSchedule(bandRoomId);
+		model.addAttribute("nextSchedule", nextSchedule);
 
 		Map<String, Object> criteria = new HashMap<>();
 		criteria.put("memberBandRoomId", bandRoomId);
@@ -126,6 +124,9 @@ public class MemberController {
 	public String showMember(@SessionAttribute(required = false) User logonUser, @PathVariable String bandRoomId,
 			Model model) {
 
+		Schedule nextSchedule = scheduleDao.findNextSchedule(bandRoomId);
+		model.addAttribute("nextSchedule", nextSchedule);
+		
 		Map<String, Object> criteria = new HashMap<>();
 		criteria.put("memberBandRoomId", bandRoomId);
 		criteria.put("memberUserId", logonUser.getUserId());
